@@ -30,7 +30,7 @@ This architecture implements the following Microservice Design Patterns:
 4. [Remote Procedure Invocation](https://microservices.io/patterns/communication-style/rpi.html)
 5. [API Gateway](https://microservices.io/patterns/apigateway.html)
 6. [Database per Service](https://microservices.io/patterns/data/database-per-service.html)
-7. [CQRS](https://microservices.io/patterns/data/cqrs.html) - GraphQL implements CQRS by default through resolution of graphs
+7. [CQRS](https://microservices.io/patterns/data/cqrs.html)
 
 ## Layers
 

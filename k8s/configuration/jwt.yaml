@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jwt
+  namespace: dev
+type: Opaque
+data:
+  JWT_SECRET: <JWT_SECRET>

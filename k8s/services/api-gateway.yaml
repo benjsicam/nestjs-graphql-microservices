@@ -1,0 +1,47 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: api-gateway
+  namespace: dev
+  labels:
+    app: api-gateway
+spec:
+  selector:
+    app: api-gateway
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-gateway
+  namespace: dev
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-Download-Options: noopen";
+      more_set_headers "X-UA-Compatible: IE=Edge,chrome=1";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+
+spec:
+  tls:
+  - hosts:
+    - example.com
+    secretName: graphql-cert
+  rules:
+  - host: example.com
+    http:
+      paths:
+      - backend:
+          serviceName: api-gateway
+          servicePort: http
+        path: /

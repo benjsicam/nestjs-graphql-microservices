@@ -1,0 +1,253 @@
+version: "3"
+
+services:
+  comments-svc:
+    image: "comments-svc:dev"
+    container_name: "comments-svc"
+    build:
+      context: "./microservices/comments-svc"
+    networks:
+      - "frontend"
+      - "backend"
+      - "commentsdomain"
+    expose:
+      - "50051"
+    depends_on:
+      - "comments-db"
+      - "cache"
+    environment:
+      NODE_ENV: "test"
+      GRPC_HOST: "0.0.0.0"
+      GRPC_PORT: "50051"
+      TYPEORM_CONNECTION: "postgres"
+      TYPEORM_HOST: "db"
+      TYPEORM_USERNAME: "postgres"
+      TYPEORM_PASSWORD: "postgres"
+      TYPEORM_DATABASE: "postgres"
+      TYPEORM_PORT: "5432"
+      TYPEORM_SYNCHRONIZE: "true"
+      TYPEORM_LOGGING: "true"
+      REDIS_HOST: "cache"
+      REDIS_PORT: "6379"
+    healthcheck:
+      test: ["CMD", "/bin/grpc_health_probe", "-addr=:50051"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: "on-failure"
+
+  posts-svc:
+    image: "posts-svc:dev"
+    container_name: "posts-svc"
+    build:
+      context: "./microservices/posts-svc"
+    networks:
+      - "frontend"
+      - "backend"
+      - "postsdomain"
+    expose:
+      - "50051"
+    depends_on:
+      - "posts-db"
+      - "cache"
+    environment:
+      NODE_ENV: "test"
+      GRPC_HOST: "0.0.0.0"
+      GRPC_PORT: "50051"
+      TYPEORM_CONNECTION: "postgres"
+      TYPEORM_HOST: "db"
+      TYPEORM_USERNAME: "postgres"
+      TYPEORM_PASSWORD: "postgres"
+      TYPEORM_DATABASE: "postgres"
+      TYPEORM_PORT: "5432"
+      TYPEORM_SYNCHRONIZE: "true"
+      TYPEORM_LOGGING: "true"
+      REDIS_HOST: "cache"
+      REDIS_PORT: "6379"
+    healthcheck:
+      test: ["CMD", "/bin/grpc_health_probe", "-addr=:50051"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: "on-failure"
+
+  users-svc:
+    image: "users-svc:dev"
+    container_name: "users-svc"
+    build:
+      context: "./microservices/users-svc"
+    networks:
+      - "frontend"
+      - "backend"
+      - "usersdomain"
+    expose:
+      - "50051"
+    depends_on:
+      - "users-db"
+      - "cache"
+    environment:
+      NODE_ENV: "test"
+      GRPC_HOST: "0.0.0.0"
+      GRPC_PORT: "50051"
+      TYPEORM_CONNECTION: "postgres"
+      TYPEORM_HOST: "db"
+      TYPEORM_USERNAME: "postgres"
+      TYPEORM_PASSWORD: "postgres"
+      TYPEORM_DATABASE: "postgres"
+      TYPEORM_PORT: "5432"
+      TYPEORM_SYNCHRONIZE: "true"
+      TYPEORM_LOGGING: "true"
+      REDIS_HOST: "cache"
+      REDIS_PORT: "6379"
+    healthcheck:
+      test: ["CMD", "/bin/grpc_health_probe", "-addr=:50051"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: "on-failure"
+
+  mailer-svc:
+    image: "mailer-svc:dev"
+    container_name: "mailer-svc"
+    build:
+      context: "./microservices/mailer-svc"
+    networks:
+      - "frontend"
+      - "mailerdomain"
+    expose:
+      - "50051"
+    environment:
+      NODE_ENV: "test"
+      GRPC_HOST: "0.0.0.0"
+      GRPC_PORT: "50051"
+      SMTP_HOST: "smtp.gmail.com"
+      SMTP_PORT: "587"
+      SMTP_SECURE: "true"
+      SMTP_USER: "username@gmail.com"
+      SMTP_PASS: "password"
+    healthcheck:
+      test: ["CMD", "/bin/grpc_health_probe", "-addr=:50051"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: "on-failure"
+
+  api-gateway:
+    image: "api-gateway:dev"
+    container_name: "api-gateway"
+    build:
+      context: "./api-gateway"
+    networks:
+      - "frontend"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "cache"
+      - "comments-svc"
+      - "posts-svc"
+      - "users-svc"
+      - "mailer-svc"
+    environment:
+      NODE_ENV: "test"
+      GRAPHQL_PORT: "3000"
+      REDIS_HOST: "cache"
+      REDIS_PORT: "6379"
+      JWT_ACCESSTOKEN_SECRET: "VtWeuJo5cPrH1gzvLX0HwPkcbVVeMkV0/a2JFeP3hGE="
+      JWT_REFRESHTOKEN_SECRET: "tPQz6vb7nJDilma85OQExilvgZX+QyEf1CL95DmfBLA="
+      JWT_ISSUER: "application"
+      JWT_AUDIENCE: "public"
+      COMMENTS_SVC_URL: "comments-svc:50051"
+      POSTS_SVC_URL: "posts-svc:50051"
+      USERS_SVC_URL: "users-svc:50051"
+      MAILER_SVC_URL: "mailer-svc:50051"
+    healthcheck:
+      test: ["CMD", "wget", "localhost:3000/healthz -q -O - > /dev/null 2>&1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: "on-failure"
+
+  comments-db:
+    image: "postgres:12-alpine"
+    container_name: "comments-db"
+    networks:
+      - "commentsdomain"
+    expose:
+      - "5432"
+    volumes:
+      - commentsdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres'"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: "on-failure"
+
+  posts-db:
+    image: "postgres:12-alpine"
+    container_name: "posts-db"
+    networks:
+      - "postsdomain"
+    expose:
+      - "5432"
+    volumes:
+      - postsdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres'"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: "on-failure"
+
+  users-db:
+    image: "postgres:12-alpine"
+    container_name: "users-db"
+    networks:
+      - "usersdomain"
+    expose:
+      - "5432"
+    volumes:
+      - usersdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres'"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: "on-failure"
+
+  cache:
+    image: "redis:5-alpine"
+    container_name: "redis-cache"
+    networks:
+      - "frontend"
+      - "backend"
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'redis-cli PING'"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: "on-failure"
+
+networks:
+  frontend:
+  backend:
+  commentsdomain:
+  postsdomain:
+  usersdomain:
+  mailerdomain:
+
+volumes:
+  commentsdata:
+  postsdata:
+  usersdata:

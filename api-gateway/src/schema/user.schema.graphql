@@ -1,0 +1,60 @@
+
+type User {
+  id: ID!
+  name: String!
+  email: EmailAddress!
+  age: UnsignedInt
+  posts(q: String, first: Int, last: Int, before: String, after: String, filterBy: JSONObject, orderBy: String): PostsConnection
+  comments(q: String, first: Int, last: Int, before: String, after: String, filterBy: JSONObject, orderBy: String): CommentsConnection
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  version: Int!
+}
+
+type UsersConnection {
+  edges: [UserEdge!]!
+  pageInfo: PageInfo!
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
+}
+
+input SignupUserInput {
+  name: String!
+  email: EmailAddress!
+  password: String!
+  age: UnsignedInt
+}
+
+input LoginUserInput {
+  email: EmailAddress!
+  password: String!
+}
+
+type UpdateProfilePayload {
+  errors: [ErrorPayload]
+  user: User
+}
+
+input UpdateProfileInput {
+  name: String
+  age: UnsignedInt
+}
+
+input UpdateEmailInput {
+  email: EmailAddress!
+  currentPassword: String!
+}
+
+input UpdatePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+  confirmPassword: String!
+}
+
+type DeleteUserPayload {
+  errors: [ErrorPayload]
+  count: Int
+}

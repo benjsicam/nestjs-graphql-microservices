@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package mailer;
+
+message SendMailInput {
+  string template = 1;
+  string to = 2;
+  bytes data = 3;
+}
+
+message SendMailPayload {
+  bool isSent = 1;
+}
+
+service MailerService {
+  rpc send (SendMailInput) returns (SendMailPayload) {}
+}

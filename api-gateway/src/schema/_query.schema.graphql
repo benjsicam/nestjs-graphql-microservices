@@ -1,0 +1,17 @@
+type Query {
+  # Comments Query
+  comments(q: String, first: Int, last: Int, before: String, after: String, filterBy: JSONObject, orderBy: String): CommentsConnection
+  commentCount(q: String): Int!
+
+  # Posts Query
+  post(id: ID!): Post!
+  posts(q: String, first: Int, last: Int, before: String, after: String, filterBy: JSONObject, orderBy: String): PostsConnection
+  postCount(q: String): Int!
+  myPosts(q: String, first: Int, last: Int, before: String, after: String, filterBy: JSONObject, orderBy: String): PostsConnection
+
+  # Users Query
+  users(q: String, first: Int, last: Int, before: String, after: String, filterBy: JSONObject, orderBy: String): UsersConnection
+  userCount(q: String): Int!
+  user(id: ID!): User!
+  me: User!
+}

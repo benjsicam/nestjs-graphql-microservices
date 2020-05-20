@@ -1,0 +1,97 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailer-svc
+  namespace: dev
+  labels:
+    app: mailer-svc
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mailer-svc
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: mailer-svc
+    spec:
+      containers:
+        - name: mailer-svc
+          image: "mailer-svc:latest"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 50m
+              memory: 150Mi
+            limits:
+              cpu: 100m
+              memory: 300Mi
+          envFrom:
+            - configMapRef:
+                name: mailer-svc
+            - secretRef:
+                name: smtp
+          ports:
+            - name: http
+              containerPort: 50051
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/grpc_health_probe"
+                - "-addr=:50051"
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
+            timeoutSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - "/bin/grpc_health_probe"
+                - "-addr=:50051"
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
+            timeoutSeconds: 10
+      terminationGracePeriodSeconds: 60
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #           - key: node-pool
+      #             operator: In
+      #             values:
+      #               - dev
+# ---
+# apiVersion: autoscaling/v2beta1
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: mailer-svc
+#   namespace: dev
+#   labels:
+#     app: mailer-svc
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     name: mailer-svc
+#     kind: Deployment
+#   minReplicas: 3
+#   maxReplicas: 10
+#   metrics:
+#     - type: Resource
+#       resource:
+#         name: cpu
+#         targetAverageUtilization: 80
+#     - type: Resource
+#       resource:
+#         name: memory
+#         targetAverageUtilization: 80

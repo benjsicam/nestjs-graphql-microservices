@@ -1,0 +1,16 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: users-svc
+  namespace: dev
+  labels:
+    app: users-svc
+spec:
+  selector:
+    app: users-svc
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

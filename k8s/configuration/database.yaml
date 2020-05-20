@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database
+  namespace: dev
+type: Opaque
+data:
+  DB_NAME: <DB_NAME>
+  DB_HOST: <DB_HOST>
+  DB_PORT: NTQzMg==
+  DB_USER: <DB_USER>
+  DB_PASSWORD: <DB_PASSWORD>

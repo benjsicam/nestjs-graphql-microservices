@@ -1,0 +1,173 @@
+---
+cache:
+  key: ${CI_PROJECT_NAME}
+  paths:
+    - node_modules/
+
+variables:
+  K8S_DEPLOYMENT_ID: api-gateway
+  K8S_DEV_NAMESPACE: dev
+  K8S_STG_NAMESPACE: stg
+  K8S_PROD_NAMESPACE: prod
+  CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+stages:
+  - setup
+  - test
+  - build
+  - release
+  - deploy
+
+setup:
+  image: node:12-alpine
+  stage: setup
+  before_script:
+    - rm -rf ./node_modules/.cache
+  script:
+    - npm install --prefer-offline &> /dev/null
+  only:
+    - merge_requests
+  tags:
+    - docker
+  allow_failure: false
+  when: always
+
+test:
+  image: node:12-alpine
+  stage: test
+  dependencies:
+    - setup
+  script:
+    - npm run lint
+    - npm run test:coverage
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  services:
+    - name: postgres:12-alpine
+      alias: db
+    - name: redis:5-alpine
+      alias: cache
+    - name: gitlab.com/benjsicam/comments-svc:latest
+      alias: comments-svc
+    - name: gitlab.com/benjsicam/posts-svc:latest
+      alias: posts-svc
+    - name: gitlab.com/benjsicam/users-svc:latest
+      alias: users-svc
+    - name: gitlab.com/benjsicam/mailer-svc:latest
+      alias: mailer-svc
+  variables:
+    FF_NETWORK_PER_BUILD: 1
+    NODE_ENV: "test"
+    GRAPHQL_PORT: "3000"
+    JWT_ACCESSTOKEN_SECRET: "Ga64EzaIG1mlP+FPsqz6bo+YK1qIBaY09toLd9fqb1w="
+    JWT_REFRESHTOKEN_SECRET: "VtWeuJo5cPrH1gzvLX0HwPkcbVVeMkV0/a2JFeP3hGE="
+    JWT_ISSUER: "application"
+    JWT_AUDIENCE: "public"
+    COMMENTS_SVC_URL: "comments-svc:50051"
+    POSTS_SVC_URL: "posts-svc:50051"
+    USERS_SVC_URL: "users-svc:50051"
+    MAILER_SVC_URL: "mailer-svc:50051"
+    GRPC_HOST: "0.0.0.0"
+    GRPC_PORT: "50051"
+    DB_HOST: "db"
+    DB_PORT: "5432"
+    DB_USERNAME: "postgres"
+    DB_PASSWORD: "postgres"
+    DB_DATABASE: "postgres"
+    DB_SCHEMA: "public"
+    REDIS_HOST: "cache"
+    REDIS_PORT: "6379"
+    POSTGRESQL_USERNAME: "postgres"
+    POSTGRESQL_PASSWORD: "postgres"
+    POSTGRESQL_DATABASE: "postgres"
+  only:
+    - dev
+    - merge_requests
+  tags:
+    - docker
+  allow_failure: true
+  when: always
+
+build:
+  image: node:12-alpine
+  stage: build
+  dependencies:
+    - test
+  script:
+    - npm run build
+  only:
+    - dev
+  tags:
+    - docker
+  artifacts:
+    paths:
+      - dist/
+  allow_failure: false
+  when: always
+
+release:
+  image: docker:19.03.8
+  stage: release
+  dependencies:
+    - build
+  script:
+    - docker build -t ${CONTAINER_IMAGE} .
+    - docker tag ${CONTAINER_IMAGE} $CI_REGISTRY_IMAGE:dev
+    - docker tag ${CONTAINER_IMAGE} $CI_REGISTRY_IMAGE:latest
+    - docker login -u ${CI_REGISTRY_USER} -p $CI_REGISTRY_PASSWORD ${CI_REGISTRY}
+    - docker push ${CONTAINER_IMAGE}
+    - docker push $CI_REGISTRY_IMAGE:dev
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - dev
+  tags:
+    - docker
+  allow_failure: false
+  when: always
+
+deploy-dev:
+  image: docker:19.03.8
+  stage: deploy
+  dependencies:
+    - release
+  script:
+    - mkdir -p /builds/${CI_PROJECT_PATH}
+    - echo "${KUBE_CONFIG}" | base64 -d > /builds/${CI_PROJECT_PATH}/config
+    - docker run --rm -v /builds/${CI_PROJECT_PATH}/config:/.kube/config bitnami/kubectl:1.17.4 set image deployment/${K8S_DEPLOYMENT_ID} ${K8S_DEPLOYMENT_ID}=${CONTAINER_IMAGE} -n ${K8S_DEV_NAMESPACE}
+  only:
+    - dev
+  tags:
+    - docker
+  allow_failure: true
+  when: always
+
+deploy-stg:
+  image: docker:19.03.8
+  stage: deploy
+  dependencies:
+    - release
+  script:
+    - mkdir -p /builds/${CI_PROJECT_PATH}
+    - echo "${KUBE_CONFIG}" | base64 -d > /builds/${CI_PROJECT_PATH}/config
+    - docker run --rm -v /builds/${CI_PROJECT_PATH}/config:/.kube/config bitnami/kubectl:1.17.4 set image deployment/${K8S_DEPLOYMENT_ID} ${K8S_DEPLOYMENT_ID}=${CONTAINER_IMAGE} -n ${K8S_STG_NAMESPACE}
+  only:
+    - dev
+  tags:
+    - docker
+  allow_failure: true
+  when: manual
+
+deploy-prod:
+  image: docker:19.03.8
+  stage: deploy
+  dependencies:
+    - release
+  script:
+    - mkdir -p /builds/${CI_PROJECT_PATH}
+    - echo "${KUBE_CONFIG}" | base64 -d > /builds/${CI_PROJECT_PATH}/config
+    - docker run --rm -v /builds/${CI_PROJECT_PATH}/config:/.kube/config bitnami/kubectl:1.17.4 set image deployment/${K8S_DEPLOYMENT_ID} ${K8S_DEPLOYMENT_ID}=${CONTAINER_IMAGE} -n ${K8S_PROD_NAMESPACE}
+  only:
+    - dev
+  tags:
+    - docker
+  allow_failure: true
+  when: manual

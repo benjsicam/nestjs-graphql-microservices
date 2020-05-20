@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+
+  mailer-svc:
+    build:
+      context: "."
+    networks:
+      - "mailer-svc"
+    ports:
+      - "50051:50051"
+    depends_on:
+      - "db"
+      - "cache"
+    environment:
+      NODE_ENV: "test"
+      GRPC_HOST: "0.0.0.0"
+      GRPC_PORT: "50051"
+      SMTP_HOST: "smtp.gmail.com"
+      SMTP_PORT: "587"
+      SMTP_SECURE: "true"
+      SMTP_USER: "username@gmail.com"
+      SMTP_PASS: "password"
+    healthcheck:
+      test: ["CMD", "/bin/grpc_health_probe", "-addr=:50051"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: "on-failure"
+
+networks:
+  mailer-svc:

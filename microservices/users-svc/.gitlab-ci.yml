@@ -1,0 +1,158 @@
+---
+cache:
+  key: ${CI_PROJECT_NAME}
+  paths:
+    - node_modules/
+
+variables:
+  K8S_DEPLOYMENT_NAME: users-svc
+  K8S_CONTAINER_NAME: users-svc
+  K8S_DEV_NAMESPACE: dev
+  K8S_STG_NAMESPACE: stg
+  K8S_PROD_NAMESPACE: prod
+  CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+stages:
+  - setup
+  - test
+  - build
+  - release
+  - deploy
+
+setup:
+  image: node:12-alpine
+  stage: setup
+  before_script:
+    - apk add --no-cache make g++ python postgresql-dev &> /dev/null
+    - rm -rf ./node_modules/.cache
+  script:
+    - npm install --prefer-offline &> /dev/null
+  only:
+    - merge_requests
+  tags:
+    - docker
+  allow_failure: false
+  when: always
+
+test:
+  image: node:12-alpine
+  stage: test
+  dependencies:
+    - setup
+  before_script:
+    - apk add --no-cache libpq
+  script:
+    - npm run lint
+    - npm run test:coverage
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  services:
+    - name: postgres:12-alpine
+      alias: db
+    - name: redis:5-alpine
+      alias: cache
+  variables:
+    NODE_ENV: "test"
+    GRPC_HOST: "0.0.0.0"
+    GRPC_PORT: "50051"
+    DB_HOST: "db"
+    DB_PORT: "5432"
+    DB_USERNAME: "postgres"
+    DB_PASSWORD: "postgres"
+    DB_DATABASE: "postgres"
+    DB_SCHEMA: "public"
+    REDIS_HOST: "cache"
+    REDIS_PORT: "6379"
+    POSTGRES_USER: "postgres"
+    POSTGRES_PASSWORD: "postgres"
+  only:
+    - dev
+    - merge_requests
+  tags:
+    - docker
+  allow_failure: false
+  when: always
+
+build:
+  image: node:12-alpine
+  stage: build
+  dependencies:
+    - test
+  script:
+    - npm run build
+  only:
+    - dev
+  tags:
+    - docker
+  artifacts:
+    paths:
+      - dist/
+  allow_failure: false
+  when: always
+
+release:
+  image: docker:19.03.8
+  stage: release
+  dependencies:
+    - build
+  script:
+    - docker build -t ${CONTAINER_IMAGE} .
+    - docker tag ${CONTAINER_IMAGE} $CI_REGISTRY_IMAGE:dev
+    - docker tag ${CONTAINER_IMAGE} $CI_REGISTRY_IMAGE:latest
+    - docker login -u ${CI_REGISTRY_USER} -p $CI_REGISTRY_PASSWORD ${CI_REGISTRY}
+    - docker push ${CONTAINER_IMAGE}
+    - docker push $CI_REGISTRY_IMAGE:dev
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - dev
+  tags:
+    - docker
+  allow_failure: false
+  when: always
+
+deploy-dev:
+  image: docker:19.03.8
+  stage: deploy
+  dependencies:
+    - release
+  script:
+    - mkdir -p /builds/${CI_PROJECT_PATH}
+    - echo "${KUBE_CONFIG}" | base64 -d > /builds/${CI_PROJECT_PATH}/config
+    - docker run --rm -v /builds/${CI_PROJECT_PATH}/config:/.kube/config bitnami/kubectl:1.17.4 set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_CONTAINER_NAME}=${CONTAINER_IMAGE} -n ${K8S_DEV_NAMESPACE}
+  only:
+    - dev
+  tags:
+    - docker
+  allow_failure: true
+  when: always
+
+deploy-stg:
+  image: docker:19.03.8
+  stage: deploy
+  dependencies:
+    - release
+  script:
+    - mkdir -p /builds/${CI_PROJECT_PATH}
+    - echo "${KUBE_CONFIG}" | base64 -d > /builds/${CI_PROJECT_PATH}/config
+    - docker run --rm -v /builds/${CI_PROJECT_PATH}/config:/.kube/config bitnami/kubectl:1.17.4 set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_CONTAINER_NAME}=${CONTAINER_IMAGE} -n ${K8S_STG_NAMESPACE}
+  only:
+    - dev
+  tags:
+    - docker
+  allow_failure: true
+  when: manual
+
+deploy-prod:
+  image: docker:19.03.8
+  stage: deploy
+  dependencies:
+    - release
+  script:
+    - mkdir -p /builds/${CI_PROJECT_PATH}
+    - echo "${KUBE_CONFIG}" | base64 -d > /builds/${CI_PROJECT_PATH}/config
+    - docker run --rm -v /builds/${CI_PROJECT_PATH}/config:/.kube/config bitnami/kubectl:1.17.4 set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_CONTAINER_NAME}=${CONTAINER_IMAGE} -n ${K8S_PROD_NAMESPACE}
+  only:
+    - dev
+  tags:
+    - docker
+  allow_failure: true
+  when: manual

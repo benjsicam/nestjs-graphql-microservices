@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cache
+  namespace: dev
+type: Opaque
+data:
+  REDIS_HOST: <CACHE_HOST>
+  REDIS_PASSWORD: <CACHE_PASSWORD>
+  REDIS_PORT: NjM3OQ==

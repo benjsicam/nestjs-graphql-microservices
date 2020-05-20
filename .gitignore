@@ -1,3 +1,7 @@
+# Compiled Dist
+dist
+dist-test
+
 # Logs
 logs
 *.log

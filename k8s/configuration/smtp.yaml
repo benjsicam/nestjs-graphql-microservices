@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: smtp
+  namespace: dev
+type: Opaque
+data:
+  SMTP_HOST: <SMTP HOST>
+  SMTP_PORT: NTg3
+  SMTP_SECURE: dHJ1ZQ==
+  SMTP_USER: <SMTP USER>
+  SMTP_PASS: <SMTP PASS>

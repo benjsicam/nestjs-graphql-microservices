@@ -1,0 +1,16 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mailer-svc
+  namespace: dev
+  labels:
+    app: mailer-svc
+spec:
+  selector:
+    app: mailer-svc
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

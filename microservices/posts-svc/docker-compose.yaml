@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+
+  posts-svc:
+    build:
+      context: "."
+    networks:
+      - "posts-svc"
+    ports:
+      - "50051:50051"
+    depends_on:
+      - "db"
+      - "cache"
+    environment:
+      NODE_ENV: "test"
+      GRPC_HOST: "0.0.0.0"
+      GRPC_PORT: "50051"
+      TYPEORM_CONNECTION: "postgres"
+      TYPEORM_HOST: "db"
+      TYPEORM_USERNAME: "postgres"
+      TYPEORM_PASSWORD: "postgres"
+      TYPEORM_DATABASE: "postgres"
+      TYPEORM_PORT: "5432"
+      TYPEORM_SYNCHRONIZE: "true"
+      TYPEORM_LOGGING: "true"
+      REDIS_HOST: "cache"
+      REDIS_PORT: "6379"
+    healthcheck:
+      test: ["CMD", "/bin/grpc_health_probe", "-addr=:50051"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: "on-failure"
+
+  db:
+    image: "postgres:12-alpine"
+    networks:
+      - "posts-svc"
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres'"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: "on-failure"
+
+  cache:
+    image: "redis:5-alpine"
+    networks:
+      - "posts-svc"
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'redis-cli PING'"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: "on-failure"
+
+networks:
+  posts-svc:

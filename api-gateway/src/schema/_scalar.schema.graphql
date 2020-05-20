@@ -1,0 +1,7 @@
+scalar DateTime
+
+scalar EmailAddress
+
+scalar UnsignedInt
+
+scalar JSONObject

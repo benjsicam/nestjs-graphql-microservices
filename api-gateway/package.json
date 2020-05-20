@@ -1,0 +1,70 @@
+{
+  "name": "api-gateway",
+  "version": "1.0.0",
+  "description": "GraphQL API Gateway",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint --max-warnings=0 ./src",
+    "lint:fix": "eslint ./src --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "copy:protos": "cpy ../_proto ./src/_proto"
+  },
+  "dependencies": {
+    "@grpc/proto-loader": "^0.5.4",
+    "@nestjs/common": "7.0.13",
+    "@nestjs/config": "0.4.2",
+    "@nestjs/core": "7.0.13",
+    "@nestjs/microservices": "7.0.13",
+    "grpc": "^1.24.2",
+    "lodash": "4.17.15",
+    "nestjs-pino": "1.2.0",
+    "pino": "6.2.1",
+    "reflect-metadata": "0.1.13",
+    "rxjs": "6.5.5"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "7.1.5",
+    "@nestjs/schematics": "7.0.0",
+    "@nestjs/testing": "7.0.13",
+    "@types/faker": "4.1.12",
+    "@types/jest": "25.2.3",
+    "@types/lodash": "4.14.152",
+    "@types/node": "14.0.4",
+    "@typescript-eslint/eslint-plugin": "2.34.0",
+    "@typescript-eslint/parser": "2.34.0",
+    "eslint": "7.0.0",
+    "eslint-config-airbnb-standard": "^3.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jest": "^23.13.1",
+    "faker": "4.1.0",
+    "graphql-request": "^1.8.2",
+    "jest": "26.0.1",
+    "jest-extended": "0.11.5",
+    "pino-pretty": "4.0.0",
+    "rimraf": "^3.0.2",
+    "ts-jest": "26.0.0",
+    "typescript": "3.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:benjsicam/nestjs-graphql-microservices.git"
+  },
+  "keywords": [
+    "graphql",
+    "microservices",
+    "grpc"
+  ],
+  "author": "Benj Sicam <benjsicam@gmail.com> (https://github.com/benjsicam)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benjsicam/nestjs-graphql-microservices/issues"
+  },
+  "homepage": "https://github.com/benjsicam/nestjs-graphql-microservices#readme"
+}

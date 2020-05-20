@@ -1,0 +1,54 @@
+
+type Post {
+  id: ID!
+  title: String!
+  body: String!
+  published: Boolean!
+  author: User!
+  comments(q: String, first: Int, last: Int, before: String, after: String, filterBy: JSONObject, orderBy: String): CommentsConnection
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  version: Int!
+}
+
+type PostsConnection {
+  edges: [PostEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PostEdge {
+  node: Post!
+  cursor: String!
+}
+
+type CreatePostPayload {
+  errors: [ErrorPayload]
+  post: Post
+}
+
+input CreatePostInput {
+  title: String!
+  body: String!
+  published: Boolean!
+}
+
+type UpdatePostPayload {
+  errors: [ErrorPayload]
+  post: Post
+}
+
+input UpdatePostInput {
+  title: String
+  body: String
+  published: Boolean
+}
+
+type DeletePostPayload {
+  errors: [ErrorPayload]
+  count: Int
+}
+
+type PostSubscriptionPayload {
+  mutation: String!
+  data: Post!
+}

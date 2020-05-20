@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: comments-svc
+  namespace: dev
+  labels:
+    app: comments-svc
+data:
+  NODE_ENV: "development"
+  HOST: "0.0.0.0"
+  PORT: "50051"

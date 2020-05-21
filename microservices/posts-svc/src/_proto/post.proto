@@ -37,7 +37,7 @@ message FindPostsPayload {
   commons.PageInfo pageInfo = 2;
 }
 
-service PostService {
+service PostsService {
   rpc find (commons.Query) returns (FindPostsPayload) {}
   rpc findById (commons.Id) returns (Post) {}
   rpc findOne (commons.Query) returns (Post) {}

@@ -1,13 +1,14 @@
 import { join } from 'path'
 
 import { NestFactory } from '@nestjs/core'
-import { Transport } from '@nestjs/microservices'
+import { Transport, MicroserviceOptions } from '@nestjs/microservices'
 import { Logger } from 'nestjs-pino'
 
+import { LoggerService, INestMicroservice } from '@nestjs/common'
 import { AppModule } from './app.module'
 
-async function bootstrap() {
-  const app = await NestFactory.createMicroservice(AppModule, {
+async function main() {
+  const app: INestMicroservice = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     transport: Transport.GRPC,
     options: {
       url: `${process.env.GRPC_HOST}:${process.env.GRPC_PORT}`,
@@ -21,9 +22,9 @@ async function bootstrap() {
     }
   })
 
-  app.useLogger(app.get(Logger))
+  app.useLogger(app.get<Logger, LoggerService>(Logger))
 
   return app.listenAsync()
 }
 
-bootstrap()
+main()

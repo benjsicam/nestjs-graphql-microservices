@@ -60,6 +60,7 @@ test:
     DB_PASSWORD: "postgres"
     DB_DATABASE: "postgres"
     DB_SCHEMA: "public"
+    DB_SYNC: "true"
     REDIS_HOST: "cache"
     REDIS_PORT: "6379"
     POSTGRES_USER: "postgres"

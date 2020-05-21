@@ -37,7 +37,7 @@ message FindUsersPayload {
   commons.PageInfo pageInfo = 2;
 }
 
-service UserService {
+service UsersService {
   rpc find (commons.Query) returns (FindUsersPayload) {}
   rpc findById (commons.Id) returns (User) {}
   rpc findOne (commons.Query) returns (User) {}

@@ -5,20 +5,24 @@ parserOptions:
   sourceType: module
 plugins:
   - "@typescript-eslint/eslint-plugin"
+  - prettier
   - import
 extends:
-  - airbnb-standard
-  - plugin:@typescript-eslint/eslint-recommended
-  - plugin:@typescript-eslint/recommended
-  - plugin:jest/recommended
-  - plugin:import/errors
-  - plugin:import/warnings
-  - plugin:import/typescript
+  - "plugin:@typescript-eslint/eslint-recommended"
+  - "plugin:@typescript-eslint/recommended"
+  - "prettier"
+  - "prettier/@typescript-eslint"
+  - "plugin:prettier/recommended"
+  - "plugin:jest/recommended"
+  - "plugin:import/errors"
+  - "plugin:import/warnings"
+  - "plugin:import/typescript"
 root: true
 env:
   node: true
   jest: true
 rules:
+  "@typescript-eslint/ban-ts-ignore": off
   "@typescript-eslint/interface-name-prefix": off
   "@typescript-eslint/explicit-function-return-type": off
   "@typescript-eslint/no-explicit-any": off
@@ -32,9 +36,12 @@ rules:
       ts: never
       tsx: never
   prettier/prettier:
-    - error
-    - parser: typescript
-      printWidth: 200
+    - "error"
+    - parser: "typescript"
+      printWidth: 300
       semi: false
       singleQuote: true
-      endOfline: lf
+      endOfline: "lf"
+      trailingComma: "none"
+
+

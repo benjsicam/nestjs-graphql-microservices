@@ -8,5 +8,5 @@ metadata:
     app: users-svc
 data:
   NODE_ENV: "development"
-  HOST: "0.0.0.0"
-  PORT: "50051"
+  GRPC_HOST: "0.0.0.0"
+  GRPC_PORT: "50051"

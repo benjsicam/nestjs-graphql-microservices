@@ -36,7 +36,7 @@ spec:
   tls:
   - hosts:
     - example.com
-    secretName: graphql-cert
+    secretName: api-gateway-cert
   rules:
   - host: example.com
     http:

@@ -6,8 +6,10 @@ metadata:
   namespace: dev
 type: Opaque
 data:
-  DB_NAME: <DB_NAME>
   DB_HOST: <DB_HOST>
   DB_PORT: NTQzMg==
-  DB_USER: <DB_USER>
+  DB_USERNAME: <DB_USER>
   DB_PASSWORD: <DB_PASSWORD>
+  DB_DATABASE: <DB_DATABASE>
+  DB_SCHEMA: cHVibGlj
+  DB_SYNC: dHJ1ZQ==

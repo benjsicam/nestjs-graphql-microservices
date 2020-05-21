@@ -8,8 +8,8 @@ metadata:
     app: api-gateway
 data:
   NODE_ENV: "development"
-  HOST: "0.0.0.0"
-  PORT: "3000"
+  GRAPHQL_PORT: "3000"
   COMMENTS_SVC_URL: <COMMENTS_SVC>:50051
   POSTS_SVC_URL: <POSTS_SVC>:50051
   USERS_SVC_URL: <USERS_SVC>:50051
+  MAILER_SVC_URL: <MAILER_SVC>:50051

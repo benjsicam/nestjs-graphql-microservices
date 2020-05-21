@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
-import { LoggerModule } from 'nestjs-pino'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
-import { HealthCheckModule } from './health-check/health-check.module'
-import { OrganizationsModule } from './organizations/organizations.module'
+import { LoggerModule } from 'nestjs-pino'
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        safe: true,
-        prettyPrint: process.env.NODE_ENV === 'development'
-      }
-    }),
-    HealthCheckModule,
-    OrganizationsModule
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        pinoHttp: {
+          safe: true,
+          prettyPrint: configService.get<string>('NODE_ENV') !== 'production'
+        }
+      }),
+      inject: [ConfigService]
+    })
   ]
 })
 export class AppModule {}

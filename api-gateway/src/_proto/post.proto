@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package post;
+
+import "commons.proto";
+
+message Post {
+  string id = 1;
+  string title = 2;
+  string body = 3;
+  bool published = 4;
+  string author = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+  int32 version = 8;
+}
+
+message PostEdge {
+  Post node = 1;
+  string cursor = 2;
+}
+
+message CreatePostInput {
+  string title = 2;
+  string body = 3;
+  bool published = 4;
+  string author = 5;
+}
+
+message UpdatePostInput {
+  string id = 1;
+  Post data = 2;
+}
+
+message FindPostsPayload {
+  repeated PostEdge edges = 1;
+  commons.PageInfo pageInfo = 2;
+}
+
+service PostsService {
+  rpc find (commons.Query) returns (FindPostsPayload) {}
+  rpc findById (commons.Id) returns (Post) {}
+  rpc findOne (commons.Query) returns (Post) {}
+  rpc count (commons.Query) returns (commons.Count) {}
+  rpc create (CreatePostInput) returns (Post) {}
+  rpc update (UpdatePostInput) returns (Post) {}
+  rpc destroy (commons.Query) returns (commons.Count) {}
+}

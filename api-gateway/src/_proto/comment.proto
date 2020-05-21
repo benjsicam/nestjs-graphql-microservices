@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package comment;
+
+import "commons.proto";
+
+message Comment {
+  string id = 1;
+  string text = 2;
+  string author = 3;
+  string post = 4;
+  string createdAt = 5;
+  string updatedAt = 6;
+  int32 version = 7;
+}
+
+message CommentEdge {
+  Comment node = 1;
+  string cursor = 2;
+}
+
+message CreateCommentInput {
+  string text = 1;
+  string author = 2;
+  string post = 3;
+}
+
+message UpdateCommentInput {
+  string id = 1;
+  Comment data = 2;
+}
+
+message FindCommentsPayload {
+  repeated CommentEdge edges = 1;
+  commons.PageInfo pageInfo = 2;
+}
+
+service CommentsService {
+  rpc find (commons.Query) returns (FindCommentsPayload) {}
+  rpc findById (commons.Id) returns (Comment) {}
+  rpc findOne (commons.Query) returns (Comment) {}
+  rpc count (commons.Query) returns (commons.Count) {}
+  rpc create (CreateCommentInput) returns (Comment) {}
+  rpc update (UpdateCommentInput) returns (Comment) {}
+  rpc destroy (commons.Query) returns (commons.Count) {}
+}

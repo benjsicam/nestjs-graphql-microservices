@@ -72,3 +72,21 @@ You must install the following on your local machine:
 2. On the Terminal, go into the project's root folder (`cd /project/root/folder`) and execute `npm start`. The start script will install all npm dependencies for all projects, lint the code, compile the code, build the artifacts (Docker images) and run them via `docker-compose`.
 
 3. Once the start script is done, the GraphQL Playground will be running on [http://localhost:3000](http://localhost:3000)
+
+## Roadmap
+
+### API Gateway
+
+- [ ] Add unit tests
+- [ ] Add authentication
+- [ ] Add authorization
+- [ ] Add request/input data validation
+- [ ] Add Circuit Breaker
+- [ ] Improve error handling
+
+### Microservices
+
+- [ ] Add caching
+- [ ] Add health checks
+- [ ] Add unit tests
+- [ ] Improve error handling

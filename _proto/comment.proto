@@ -35,7 +35,7 @@ message FindCommentsPayload {
   commons.PageInfo pageInfo = 2;
 }
 
-service CommentService {
+service CommentsService {
   rpc find (commons.Query) returns (FindCommentsPayload) {}
   rpc findById (commons.Id) returns (Comment) {}
   rpc findOne (commons.Query) returns (Comment) {}

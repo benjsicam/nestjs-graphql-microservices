@@ -21,26 +21,9 @@ type PostEdge {
   cursor: String!
 }
 
-type CreatePostPayload {
+type PostPayload {
   errors: [ErrorPayload]
   post: Post
-}
-
-input CreatePostInput {
-  title: String!
-  body: String!
-  published: Boolean!
-}
-
-type UpdatePostPayload {
-  errors: [ErrorPayload]
-  post: Post
-}
-
-input UpdatePostInput {
-  title: String
-  body: String
-  published: Boolean
 }
 
 type DeletePostPayload {
@@ -51,4 +34,16 @@ type DeletePostPayload {
 type PostSubscriptionPayload {
   mutation: String!
   data: Post!
+}
+
+input CreatePostInput {
+  title: String!
+  body: String!
+  published: Boolean!
+}
+
+input UpdatePostInput {
+  title: String
+  body: String
+  published: Boolean
 }

@@ -21,6 +21,16 @@ type UserEdge {
   cursor: String!
 }
 
+type UserPayload {
+  errors: [ErrorPayload]
+  user: User
+}
+
+type DeleteAccountPayload {
+  errors: [ErrorPayload]
+  count: Int
+}
+
 input SignupUserInput {
   name: String!
   email: EmailAddress!
@@ -31,11 +41,6 @@ input SignupUserInput {
 input LoginUserInput {
   email: EmailAddress!
   password: String!
-}
-
-type UpdateProfilePayload {
-  errors: [ErrorPayload]
-  user: User
 }
 
 input UpdateProfileInput {
@@ -52,9 +57,4 @@ input UpdatePasswordInput {
   currentPassword: String!
   newPassword: String!
   confirmPassword: String!
-}
-
-type DeleteUserPayload {
-  errors: [ErrorPayload]
-  count: Int
 }

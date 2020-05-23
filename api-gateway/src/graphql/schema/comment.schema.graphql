@@ -18,23 +18,9 @@ type CommentEdge {
   cursor: String!
 }
 
-type CreateCommentPayload {
+type CommentPayload {
   errors: [ErrorPayload]
   comment: Comment
-}
-
-input CreateCommentInput {
-  text: String!
-  post: ID!
-}
-
-type UpdateCommentPayload {
-  errors: [ErrorPayload]
-  comment: Comment
-}
-
-input UpdateCommentInput {
-  text: String
 }
 
 type DeleteCommentPayload {
@@ -45,4 +31,13 @@ type DeleteCommentPayload {
 type CommentSubscriptionPayload {
   mutation: String!
   data: Comment!
+}
+
+input CreateCommentInput {
+  text: String!
+  post: ID!
+}
+
+input UpdateCommentInput {
+  text: String
 }

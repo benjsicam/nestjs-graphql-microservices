@@ -63,7 +63,7 @@ You must install the following on your local machine:
 
 ## How to Run
 
-1. System Requirements - must be Linux/Mac
+1. System Requirements
 - [Node.js](https://nodejs.org/en/) - v12 Recommended
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)

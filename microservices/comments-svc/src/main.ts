@@ -17,7 +17,8 @@ async function main() {
       loader: {
         keepCase: true,
         enums: String,
-        oneofs: true
+        oneofs: true,
+        arrays: true
       }
     }
   })

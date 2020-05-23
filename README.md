@@ -78,7 +78,6 @@ You must install the following on your local machine:
 ### API Gateway
 
 - [ ] Add unit tests
-- [ ] Add authentication
 - [ ] Add authorization
 - [ ] Add request/input data validation
 - [ ] Add Circuit Breaker

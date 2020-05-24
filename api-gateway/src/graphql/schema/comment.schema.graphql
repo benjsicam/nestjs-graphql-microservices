@@ -28,11 +28,6 @@ type DeleteCommentPayload {
   count: Int
 }
 
-type CommentSubscriptionPayload {
-  mutation: String!
-  data: Comment!
-}
-
 input CreateCommentInput {
   text: String!
   post: ID!

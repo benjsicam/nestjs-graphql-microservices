@@ -31,11 +31,6 @@ type DeletePostPayload {
   count: Int
 }
 
-type PostSubscriptionPayload {
-  mutation: String!
-  data: Post!
-}
-
 input CreatePostInput {
   title: String!
   body: String!

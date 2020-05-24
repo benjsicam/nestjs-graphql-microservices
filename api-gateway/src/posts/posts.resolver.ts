@@ -1,9 +1,10 @@
 import { Inject, OnModuleInit, UseGuards } from '@nestjs/common'
 import { ClientGrpcProxy } from '@nestjs/microservices'
-import { Query, Resolver, Args, Parent, ResolveField, Mutation, Context } from '@nestjs/graphql'
+import { Query, Resolver, Args, Parent, ResolveField, Mutation, Context, Subscription } from '@nestjs/graphql'
 
 import { isEmpty, merge } from 'lodash'
 import { PinoLogger } from 'nestjs-pino'
+import { PubSub } from 'graphql-subscriptions'
 
 import { ICommentsService } from '../comments/comments.interface'
 import { IPostsService } from './posts.interface'
@@ -26,6 +27,9 @@ export class PostsResolver implements OnModuleInit {
 
     @Inject('UsersServiceClient')
     private readonly usersServiceClient: ClientGrpcProxy,
+
+    @Inject('PubSubService')
+    private readonly pubSubService: PubSub,
 
     private readonly queryUtils: QueryUtils,
 
@@ -164,6 +168,8 @@ export class PostsResolver implements OnModuleInit {
       })
       .toPromise()
 
+    this.pubSubService.publish('postAdded', post)
+
     return { post }
   }
 
@@ -190,5 +196,12 @@ export class PostsResolver implements OnModuleInit {
         where: JSON.stringify({ id })
       })
       .toPromise()
+  }
+
+  @Subscription('postAdded', {
+    resolve: (value: Comment) => value
+  })
+  postAdded() {
+    return this.pubSubService.asyncIterator('postAdded')
   }
 }

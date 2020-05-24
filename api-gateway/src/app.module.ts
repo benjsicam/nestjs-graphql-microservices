@@ -33,6 +33,7 @@ import { playgroundQuery } from './graphql/playground-query'
       imports: [LoggerModule],
       useFactory: async (logger: PinoLogger): Promise<GqlModuleOptions> => ({
         path: '/',
+        subscriptions: '/',
         typePaths: ['./**/*.graphql'],
         resolvers: {
           DateTime: DateTimeResolver,
@@ -46,7 +47,7 @@ import { playgroundQuery } from './graphql/playground-query'
         logger,
         debug: true,
         cors: false,
-        // installSubscriptionHandlers: true,
+        installSubscriptionHandlers: true,
         playground: {
           endpoint: '/',
           subscriptionEndpoint: '/',

@@ -1,3 +1,4 @@
+
 /** ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
@@ -84,11 +85,6 @@ export interface DeleteCommentPayload {
     count?: number;
 }
 
-export interface CommentSubscriptionPayload {
-    mutation: string;
-    data: Comment;
-}
-
 export interface ErrorPayload {
     field?: string;
     message?: string[];
@@ -148,11 +144,6 @@ export interface DeletePostPayload {
     count?: number;
 }
 
-export interface PostSubscriptionPayload {
-    mutation: string;
-    data: Post;
-}
-
 export interface IQuery {
     comments(q?: string, first?: number, last?: number, before?: string, after?: string, filterBy?: JSONObject, orderBy?: string): CommentsConnection | Promise<CommentsConnection>;
     commentCount(q?: string, filterBy?: JSONObject): number | Promise<number>;
@@ -167,8 +158,8 @@ export interface IQuery {
 }
 
 export interface ISubscription {
-    comment(post: string): CommentSubscriptionPayload | Promise<CommentSubscriptionPayload>;
-    post(): PostSubscriptionPayload | Promise<PostSubscriptionPayload>;
+    commentAdded(post: string): Comment | Promise<Comment>;
+    postAdded(): Post | Promise<Post>;
 }
 
 export interface User {

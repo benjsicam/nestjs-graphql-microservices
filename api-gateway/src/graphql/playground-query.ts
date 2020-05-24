@@ -43,6 +43,27 @@ mutation login {
   }
 }
 
+subscription postAdded {
+  postAdded {
+    id
+    title
+    body
+    createdAt
+    updatedAt
+    version
+  }
+}
+
+subscription commentAdded {
+  commentAdded(post: "<replace with post id>") {
+    id
+    text
+    createdAt
+    updatedAt
+    version
+  }
+}
+
 mutation createPost {
   createPost(
     data: {

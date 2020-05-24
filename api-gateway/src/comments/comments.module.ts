@@ -8,9 +8,10 @@ import { CommentsResolver } from './comments.resolver'
 import { UtilsModule } from '../utils/utils.module'
 import { PostsModule } from '../posts/posts.module'
 import { UsersModule } from '../users/users.module'
+import { CommonsModule } from '../commons/commons.module'
 
 @Module({
-  imports: [ConfigModule, LoggerModule, UtilsModule, forwardRef(() => PostsModule), forwardRef(() => UsersModule)],
+  imports: [ConfigModule, LoggerModule, CommonsModule, UtilsModule, forwardRef(() => PostsModule), forwardRef(() => UsersModule)],
   providers: [
     CommentsResolver,
     {

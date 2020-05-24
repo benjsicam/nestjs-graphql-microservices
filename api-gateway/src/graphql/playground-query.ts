@@ -54,6 +54,10 @@ mutation refreshToken {
   }
 }
 
+mutation logout {
+  logout
+}
+
 subscription postAdded {
   postAdded {
     id

@@ -1,3 +1,4 @@
+
 /** ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
@@ -97,14 +98,16 @@ export interface PageInfo {
 }
 
 export interface IMutation {
+    signup(data: SignupUserInput): UserPayload | Promise<UserPayload>;
+    login(data: LoginUserInput): UserPayload | Promise<UserPayload>;
+    refreshToken(): UserPayload | Promise<UserPayload>;
+    logout(): boolean | Promise<boolean>;
     createComment(data: CreateCommentInput): CommentPayload | Promise<CommentPayload>;
     updateComment(id: string, data: UpdateCommentInput): CommentPayload | Promise<CommentPayload>;
     deleteComment(id: string): DeleteCommentPayload | Promise<DeleteCommentPayload>;
     createPost(data: CreatePostInput): PostPayload | Promise<PostPayload>;
     updatePost(id: string, data: UpdatePostInput): PostPayload | Promise<PostPayload>;
     deletePost(id: string): DeletePostPayload | Promise<DeletePostPayload>;
-    signup(data: SignupUserInput): UserPayload | Promise<UserPayload>;
-    login(data: LoginUserInput): UserPayload | Promise<UserPayload>;
     updateProfile(data: UpdateProfileInput): UserPayload | Promise<UserPayload>;
     updateEmail(data?: UpdateEmailInput): UserPayload | Promise<UserPayload>;
     updatePassword(data?: UpdatePasswordInput): UserPayload | Promise<UserPayload>;

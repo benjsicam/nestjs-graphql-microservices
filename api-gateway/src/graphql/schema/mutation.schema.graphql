@@ -3,6 +3,7 @@ type Mutation {
   signup(data: SignupUserInput!): UserPayload!
   login(data: LoginUserInput!): UserPayload!
   refreshToken: UserPayload!
+  logout: Boolean!
 
   # Comments Mutations
   createComment(data: CreateCommentInput!): CommentPayload!

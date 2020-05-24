@@ -99,4 +99,20 @@ export class AuthResolver implements OnModuleInit {
 
     return { user }
   }
+
+  @Mutation()
+  async logout(@Context() context: any): Promise<boolean> {
+    const { res } = context
+
+    res.cookie('access-token', '', {
+      httpOnly: true,
+      maxAge: 0
+    })
+    res.cookie('refresh-token', '', {
+      httpOnly: true,
+      maxAge: 0
+    })
+
+    return true
+  }
 }

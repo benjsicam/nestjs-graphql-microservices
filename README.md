@@ -64,9 +64,9 @@ You must install the following on your local machine:
 ## How to Run
 
 1. System Requirements
-- [Node.js](https://nodejs.org/en/) - v12 Recommended
-- [Docker](https://docs.docker.com/install/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+* [Node.js](https://nodejs.org/en/) - v12 Recommended
+* [Docker](https://docs.docker.com/install/)
+* [Docker Compose](https://docs.docker.com/compose/install/)
 - PostgreSQL Client (libpq as required by [pg-native](https://www.npmjs.com/package/pg-native#install))
 
 2. On the Terminal, go into the project's root folder (`cd /project/root/folder`) and execute `npm start`. The start script will install all npm dependencies for all projects, lint the code, compile the code, build the artifacts (Docker images) and run them via `docker-compose`.
@@ -77,18 +77,18 @@ You must install the following on your local machine:
 
 ### API Gateway
 
-[ ] Add unit tests
-[ x ] Add refresh token support
-[ ] Add authorization
-[ ] Add request/input data validation
-[ ] Add Circuit Breaker
-[ ] Improve logging
-[ ] Improve error handling
+* [ ] Add unit tests
+* [x] Add refresh token support
+* [ ] Add authorization
+* [ ] Add request/input data validation
+* [ ] Add Circuit Breaker
+* [ ] Improve logging
+* [ ] Improve error handling
 
 ### Microservices
 
-[ ] Add caching
-[ ] Add health checks
-[ ] Add unit tests
-[ ] Improve logging
-[ ] Improve error handling
+* [ ] Add caching
+* [ ] Add health checks
+* [ ] Add unit tests
+* [ ] Improve logging
+* [ ] Improve error handling

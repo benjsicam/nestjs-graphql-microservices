@@ -77,18 +77,18 @@ You must install the following on your local machine:
 
 ### API Gateway
 
-- [ ] Add unit tests
-- [ x ] Add refresh token support
-- [ ] Add authorization
-- [ ] Add request/input data validation
-- [ ] Add Circuit Breaker
-- [ ] Improve logging
-- [ ] Improve error handling
+[ ] Add unit tests
+[ x ] Add refresh token support
+[ ] Add authorization
+[ ] Add request/input data validation
+[ ] Add Circuit Breaker
+[ ] Improve logging
+[ ] Improve error handling
 
 ### Microservices
 
-- [ ] Add caching
-- [ ] Add health checks
-- [ ] Add unit tests
-- [ ] Improve logging
-- [ ] Improve error handling
+[ ] Add caching
+[ ] Add health checks
+[ ] Add unit tests
+[ ] Improve logging
+[ ] Improve error handling

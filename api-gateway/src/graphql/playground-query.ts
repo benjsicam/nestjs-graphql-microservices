@@ -43,6 +43,17 @@ mutation login {
   }
 }
 
+mutation refreshToken {
+  refreshToken {
+    user {
+      id
+      name
+      email
+      age
+    }
+  }
+}
+
 subscription postAdded {
   postAdded {
     id

@@ -66,8 +66,8 @@ import { playgroundQuery } from './graphql/playground-query'
       }),
       inject: [PinoLogger]
     }),
-    UsersModule,
     AuthModule,
+    UsersModule,
     PostsModule,
     CommentsModule
   ]

@@ -11,7 +11,7 @@ import { IUsersService } from '../users/users.interface'
 import { User } from '../graphql/typings'
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') implements OnModuleInit {
+export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') implements OnModuleInit {
   constructor(
     @Inject('UsersServiceClient')
     private readonly usersServiceClient: ClientGrpcProxy,
@@ -21,13 +21,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') implements On
     private readonly logger: PinoLogger
   ) {
     super({
-      secretOrKey: configService.get<string>('JWT_ACCESSTOKEN_SECRET'),
+      secretOrKey: configService.get<string>('JWT_REFRESHTOKEN_SECRET'),
       issuer: configService.get<string>('JWT_ISSUER'),
       audience: configService.get<string>('JWT_AUDIENCE'),
-      jwtFromRequest: ExtractJwt.fromExtractors([(req) => get(req, 'cookies.access-token')])
+      jwtFromRequest: ExtractJwt.fromExtractors([(req) => get(req, 'cookies.refresh-token')])
     })
 
-    logger.setContext(JwtStrategy.name)
+    logger.setContext(JwtRefreshStrategy.name)
   }
 
   private usersService: IUsersService

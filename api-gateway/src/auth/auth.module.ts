@@ -1,19 +1,24 @@
 import { Module, forwardRef } from '@nestjs/common'
 import { LoggerModule } from 'nestjs-pino'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-
-import { AuthService } from './auth.service'
-import { JwtStrategy } from './jwt.strategy'
-
-import { UsersModule } from '../users/users.module'
 import { PassportModule } from '@nestjs/passport'
 import { JwtService } from '@nestjs/jwt'
 
+import { AuthService } from './auth.service'
+import { AuthResolver } from './auth.resolver'
+import { JwtStrategy } from './jwt.strategy'
+import { JwtRefreshStrategy } from './jwt-refresh.strategy'
+
+import { UsersModule } from '../users/users.module'
+import { UtilsModule } from '../utils/utils.module'
+
 @Module({
-  imports: [ConfigModule, LoggerModule, PassportModule.register({ defaultStrategy: 'jwt' }), forwardRef(() => UsersModule)],
+  imports: [ConfigModule, LoggerModule, UtilsModule, PassportModule.register({ defaultStrategy: 'jwt' }), forwardRef(() => UsersModule)],
   providers: [
     AuthService,
     JwtStrategy,
+    JwtRefreshStrategy,
+    AuthResolver,
     {
       provide: 'JwtAccessTokenService',
       inject: [ConfigService],

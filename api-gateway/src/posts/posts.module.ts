@@ -4,7 +4,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { LoggerModule } from 'nestjs-pino'
 import { ClientProxyFactory, Transport, ClientGrpcProxy } from '@nestjs/microservices'
 
-import { PostsResolver } from './posts.resolver'
+import { PostsTypeResolver } from './posts-type.resolver'
+import { PostsQueryResolver } from './posts-query.resolver'
+import { PostsMutationResolver } from './posts-mutation.resolver'
+import { PostsSubscriptionResolver } from './posts-subscription.resolver'
+
 import { UtilsModule } from '../utils/utils.module'
 import { CommentsModule } from '../comments/comments.module'
 import { UsersModule } from '../users/users.module'
@@ -13,7 +17,10 @@ import { CommonsModule } from '../commons/commons.module'
 @Module({
   imports: [ConfigModule, LoggerModule, CommonsModule, UtilsModule, forwardRef(() => CommentsModule), forwardRef(() => UsersModule)],
   providers: [
-    PostsResolver,
+    PostsTypeResolver,
+    PostsQueryResolver,
+    PostsMutationResolver,
+    PostsSubscriptionResolver,
     {
       provide: 'PostsServiceClient',
       useFactory: (configService: ConfigService): ClientGrpcProxy => {

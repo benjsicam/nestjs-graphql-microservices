@@ -10,14 +10,14 @@ import { CommentDto } from './comment.dto'
 import { ICommentsService } from './comments.interface'
 import { IPostsService } from '../posts/posts.interface'
 import { IUsersService } from '../users/users.interface'
-import { GqlAuthGuard } from '../auth/gql.authguard'
+import { GqlAuthGuard } from '../auth/gql-auth.guard'
 import { CurrentUser } from '../auth/user.decorator'
 import { CommentsConnection, Comment, Post, User, CommentPayload, UpdateCommentInput, DeleteCommentPayload } from '../graphql/typings'
 
 import { QueryUtils } from '../utils/query.utils'
 
 @Resolver('Comment')
-export class CommentsResolver implements OnModuleInit {
+export class CommentsTypeResolver implements OnModuleInit {
   constructor(
     @Inject('CommentsServiceClient')
     private readonly commentsServiceClient: ClientGrpcProxy,
@@ -35,7 +35,7 @@ export class CommentsResolver implements OnModuleInit {
 
     private readonly logger: PinoLogger
   ) {
-    logger.setContext(CommentsResolver.name)
+    logger.setContext(CommentsTypeResolver.name)
   }
 
   private commentsService: ICommentsService
@@ -154,7 +154,7 @@ export class CommentsResolver implements OnModuleInit {
     resolve: (value: Comment) => value,
     filter: (payload: Comment, variables: Record<string, any>) => payload.post === variables.post
   })
-  commentAdded() {
+  commentAdded(): AsyncIterator<unknown, any, undefined> {
     return this.pubSubService.asyncIterator('commentAdded')
   }
 }

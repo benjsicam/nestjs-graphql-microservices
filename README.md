@@ -78,10 +78,11 @@ You must install the following on your local machine:
 ### API Gateway
 
 - [ ] Add unit tests
-- [ ] Add refresh token support
+- [ x ] Add refresh token support
 - [ ] Add authorization
 - [ ] Add request/input data validation
 - [ ] Add Circuit Breaker
+- [ ] Improve logging
 - [ ] Improve error handling
 
 ### Microservices
@@ -89,4 +90,5 @@ You must install the following on your local machine:
 - [ ] Add caching
 - [ ] Add health checks
 - [ ] Add unit tests
+- [ ] Improve logging
 - [ ] Improve error handling

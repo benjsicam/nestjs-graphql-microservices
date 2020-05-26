@@ -1,6 +1,6 @@
-# NestJS GraphQL + gRPC microservices
+# NestJS GraphQL API + gRPC microservices
 
-This project is a [monorepo](https://gomonorepo.org/) containing a [GraphQL](https://graphql.org/) API gateway with [gRPC](https://grpc.io/) back-end microservices built using the [NestJS framework](https://nestjs.com/). This project is mainly used for learning/trial purposes only.
+This project is a [monorepo](https://gomonorepo.org/) containing a [GraphQL](https://graphql.org/) API with [gRPC](https://grpc.io/) back-end microservices built using the [NestJS framework](https://nestjs.com/). This project is mainly used for learning/trial and boilerplate purposes only.
 
 ## Graph Model
 
@@ -8,13 +8,15 @@ When creating GraphQL APIs, one must understand what [Graph Theory](https://en.w
 
 ![Graph Model](https://raw.githubusercontent.com/benjsicam/nestjs-graphql-microservices/master/docs/img/graph-model.png)
 
+### Explanation
+
 1. Users can write both posts and comments therefore, users are authors posts and comments.
 2. Posts are authored by users and comments can be linked/submitted for them.
 3. Comments are authored by users and are linked/submitted to posts.
 
 ## Architecture Overview
  
-The GraphQL API acts as a gateway/proxy for the different microservices it exposes. The resolvers of the GraphQL API make calls to the gRPC servers/microservices in the back-end through gRPC client implementations of the back-end services which are defined through [Protocol Buffers](https://developers.google.com/protocol-buffers/) that also serves as the data interchange format. The gRPC microservices then handles the request to connect to databases or any other service it needs to fulfill the client requests.
+The GraphQL API acts as a gateway/proxy for the different microservices it exposes. The resolvers of the GraphQL API make calls to the gRPC microservices through client-server communication. The services and the data interchange are defined using [Protocol Buffers](https://developers.google.com/protocol-buffers/). The gRPC microservices handle and fulfill the requests whether they are database or storage operations or any other internal or external calls.
 
 ### Diagram
 
@@ -39,11 +41,11 @@ This architecture implements the following Microservice Design Patterns:
 
 ### Microservice Layer
 
-[gRPC](https://grpc.io/) was chosen as the framework to do the microservices. [Protocol buffers](https://developers.google.com/protocol-buffers/) was used as the data interchange format between the client (GraphQL API) and the server (gRPC microservices). NestJS is still the framework used to create the gRPC Microservices.
+[NestJS + gRPC](https://grpc.io/) was chosen as the framework to do the microservices. [Protocol buffers](https://developers.google.com/protocol-buffers/) was used as the data interchange format between the client (GraphQL API) and the server (gRPC microservices). NestJS is still the framework used to create the gRPC Microservices.
 
 ### Persistence Layer
 
-PostgreSQL is used as the database and [TypeORM](https://typeorm.io/) is used as the Object-Relational Mapper (ORM).
+PostgreSQL is used as the database and [Sequelize](https://sequelize.org) is used as the Object-Relational Mapper (ORM).
 
 ## Deployment
 
@@ -60,17 +62,11 @@ You must install the following on your local machine:
 3. Docker Compose
 4. PostgreSQL Client (libpq as required by [pg-native](https://www.npmjs.com/package/pg-native#install))
 
-## How to Run
+### Running
 
-1. System Requirements
-* [Node.js](https://nodejs.org/en/) - v12 Recommended
-* [Docker](https://docs.docker.com/install/)
-* [Docker Compose](https://docs.docker.com/compose/install/)
-- PostgreSQL Client (libpq as required by [pg-native](https://www.npmjs.com/package/pg-native#install))
+1. On the Terminal, go into the project's root folder (`cd /project/root/folder`) and execute `npm start`. The start script will install all npm dependencies for all projects, lint the code, transpile the code, build the artifacts (Docker images) and run all of them via `docker-compose`.
 
-2. On the Terminal, go into the project's root folder (`cd /project/root/folder`) and execute `npm start`. The start script will install all npm dependencies for all projects, lint the code, compile the code, build the artifacts (Docker images) and run them via `docker-compose`.
-
-3. Once the start script is done, the GraphQL Playground will be running on [http://localhost:3000](http://localhost:3000)
+2. Once the start script is done, the GraphQL Playground will be running on [http://localhost:3000](http://localhost:3000)
 
 ## Roadmap
 
@@ -80,9 +76,9 @@ You must install the following on your local machine:
 * [x] Add refresh token support
 * [ ] Add authorization
 * [ ] Add request/input data validation
-* [ ] Add Circuit Breaker
 * [ ] Improve logging
 * [ ] Improve error handling
+* [ ] Add DataLoader support
 
 ### Microservices
 

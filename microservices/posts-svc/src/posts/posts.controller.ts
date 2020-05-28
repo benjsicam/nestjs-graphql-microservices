@@ -1,12 +1,14 @@
 import Aigle from 'aigle'
 
-import { PinoLogger } from 'nestjs-pino'
 import { Controller, Inject } from '@nestjs/common'
 import { GrpcMethod } from '@nestjs/microservices'
-import { isEmpty, isNil } from 'lodash'
+
+import { Metadata } from 'grpc'
+import { PinoLogger } from 'nestjs-pino'
+import { get, isEmpty, isNil } from 'lodash'
 
 import { ICount, IQuery } from '../commons/commons.interface'
-import { IPostsService } from './posts.interface'
+import { IPostsService, IPostUpdateInput } from './posts.interface'
 import { IFindPayload } from '../commons/cursor-pagination.interface'
 
 import { Post } from './post.model'
@@ -109,8 +111,16 @@ export class PostsController {
   }
 
   @GrpcMethod('PostsService', 'update')
-  async update({ id, data }): Promise<Post> {
-    this.logger.info('PostsController#update.call %o %o', id, data)
+  async update(input: IPostUpdateInput, metadata: Metadata): Promise<Post> {
+    this.logger.info('PostsController#update.call %o %o', input, metadata.getMap())
+
+    const { id, data } = input
+    const user: string = get(metadata.getMap(), 'user', '').toString()
+    const post: Post = await this.service.findById(id)
+
+    if (isEmpty(post)) throw new Error(`Post record with ID ${id} not found.`)
+
+    if (post.author !== user) throw new Error('You are not allowed to modify this post.')
 
     const result: Post = await this.service.update(id, data)
 

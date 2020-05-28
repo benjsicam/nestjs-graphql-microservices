@@ -55,6 +55,41 @@ export interface UpdatePasswordInput {
     confirmPassword: string;
 }
 
+export interface IMutation {
+    signup(data: SignupUserInput): UserPayload | Promise<UserPayload>;
+    login(data: LoginUserInput): UserPayload | Promise<UserPayload>;
+    refreshToken(): UserPayload | Promise<UserPayload>;
+    logout(): boolean | Promise<boolean>;
+    createComment(data: CreateCommentInput): CommentPayload | Promise<CommentPayload>;
+    updateComment(id: string, data: UpdateCommentInput): CommentPayload | Promise<CommentPayload>;
+    deleteComment(id: string): DeleteCommentPayload | Promise<DeleteCommentPayload>;
+    createPost(data: CreatePostInput): PostPayload | Promise<PostPayload>;
+    updatePost(id: string, data: UpdatePostInput): PostPayload | Promise<PostPayload>;
+    deletePost(id: string): DeletePostPayload | Promise<DeletePostPayload>;
+    updateProfile(data: UpdateProfileInput): UserPayload | Promise<UserPayload>;
+    updateEmail(data?: UpdateEmailInput): UserPayload | Promise<UserPayload>;
+    updatePassword(data?: UpdatePasswordInput): UserPayload | Promise<UserPayload>;
+    deleteAccount(): DeleteAccountPayload | Promise<DeleteAccountPayload>;
+}
+
+export interface IQuery {
+    comments(q?: string, first?: number, last?: number, before?: string, after?: string, filterBy?: JSONObject, orderBy?: string): CommentsConnection | Promise<CommentsConnection>;
+    commentCount(q?: string, filterBy?: JSONObject): number | Promise<number>;
+    post(id: string): Post | Promise<Post>;
+    posts(q?: string, first?: number, last?: number, before?: string, after?: string, filterBy?: JSONObject, orderBy?: string): PostsConnection | Promise<PostsConnection>;
+    postCount(q?: string, filterBy?: JSONObject): number | Promise<number>;
+    myPosts(q?: string, first?: number, last?: number, before?: string, after?: string, filterBy?: JSONObject, orderBy?: string): PostsConnection | Promise<PostsConnection>;
+    user(id: string): User | Promise<User>;
+    users(q?: string, first?: number, last?: number, before?: string, after?: string, filterBy?: JSONObject, orderBy?: string): UsersConnection | Promise<UsersConnection>;
+    userCount(q?: string, filterBy?: JSONObject): number | Promise<number>;
+    me(): User | Promise<User>;
+}
+
+export interface ISubscription {
+    commentAdded(post: string): Comment | Promise<Comment>;
+    postAdded(): Post | Promise<Post>;
+}
+
 export interface Comment {
     id: string;
     text: string;
@@ -97,23 +132,6 @@ export interface PageInfo {
     hasPreviousPage: boolean;
 }
 
-export interface IMutation {
-    signup(data: SignupUserInput): UserPayload | Promise<UserPayload>;
-    login(data: LoginUserInput): UserPayload | Promise<UserPayload>;
-    refreshToken(): UserPayload | Promise<UserPayload>;
-    logout(): boolean | Promise<boolean>;
-    createComment(data: CreateCommentInput): CommentPayload | Promise<CommentPayload>;
-    updateComment(id: string, data: UpdateCommentInput): CommentPayload | Promise<CommentPayload>;
-    deleteComment(id: string): DeleteCommentPayload | Promise<DeleteCommentPayload>;
-    createPost(data: CreatePostInput): PostPayload | Promise<PostPayload>;
-    updatePost(id: string, data: UpdatePostInput): PostPayload | Promise<PostPayload>;
-    deletePost(id: string): DeletePostPayload | Promise<DeletePostPayload>;
-    updateProfile(data: UpdateProfileInput): UserPayload | Promise<UserPayload>;
-    updateEmail(data?: UpdateEmailInput): UserPayload | Promise<UserPayload>;
-    updatePassword(data?: UpdatePasswordInput): UserPayload | Promise<UserPayload>;
-    deleteAccount(): DeleteAccountPayload | Promise<DeleteAccountPayload>;
-}
-
 export interface Post {
     id: string;
     title: string;
@@ -144,24 +162,6 @@ export interface PostPayload {
 export interface DeletePostPayload {
     errors?: ErrorPayload[];
     count?: number;
-}
-
-export interface IQuery {
-    comments(q?: string, first?: number, last?: number, before?: string, after?: string, filterBy?: JSONObject, orderBy?: string): CommentsConnection | Promise<CommentsConnection>;
-    commentCount(q?: string, filterBy?: JSONObject): number | Promise<number>;
-    post(id: string): Post | Promise<Post>;
-    posts(q?: string, first?: number, last?: number, before?: string, after?: string, filterBy?: JSONObject, orderBy?: string): PostsConnection | Promise<PostsConnection>;
-    postCount(q?: string, filterBy?: JSONObject): number | Promise<number>;
-    myPosts(q?: string, first?: number, last?: number, before?: string, after?: string, filterBy?: JSONObject, orderBy?: string): PostsConnection | Promise<PostsConnection>;
-    user(id: string): User | Promise<User>;
-    users(q?: string, first?: number, last?: number, before?: string, after?: string, filterBy?: JSONObject, orderBy?: string): UsersConnection | Promise<UsersConnection>;
-    userCount(q?: string, filterBy?: JSONObject): number | Promise<number>;
-    me(): User | Promise<User>;
-}
-
-export interface ISubscription {
-    commentAdded(post: string): Comment | Promise<Comment>;
-    postAdded(): Post | Promise<Post>;
 }
 
 export interface User {

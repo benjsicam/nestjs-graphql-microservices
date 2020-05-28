@@ -1,12 +1,14 @@
 import Aigle from 'aigle'
 
-import { PinoLogger } from 'nestjs-pino'
 import { Controller, Inject } from '@nestjs/common'
 import { GrpcMethod } from '@nestjs/microservices'
-import { isEmpty, isNil } from 'lodash'
+
+import { Metadata } from 'grpc'
+import { PinoLogger } from 'nestjs-pino'
+import { get, isEmpty, isNil } from 'lodash'
 
 import { ICount, IQuery } from '../commons/commons.interface'
-import { ICommentsService } from './comments.interface'
+import { ICommentsService, ICommentUpdateInput } from './comments.interface'
 import { IFindPayload } from '../commons/cursor-pagination.interface'
 
 import { Comment } from './comment.model'
@@ -109,8 +111,16 @@ export class CommentsController {
   }
 
   @GrpcMethod('CommentsService', 'update')
-  async update({ id, data }): Promise<Comment> {
-    this.logger.info('CommentsController#update.call %o %o', id, data)
+  async update(input: ICommentUpdateInput, metadata: Metadata): Promise<Comment> {
+    this.logger.info('CommentsController#update.call %o %o', input, metadata.getMap())
+
+    const { id, data } = input
+    const user: string = get(metadata.getMap(), 'user', '').toString()
+    const comment: Comment = await this.service.findById(id)
+
+    if (isEmpty(comment)) throw new Error(`Comment record with ID ${id} not found.`)
+
+    if (comment.author !== user) throw new Error('You are not allowed to modify this comment.')
 
     const result: Comment = await this.service.update(id, data)
 

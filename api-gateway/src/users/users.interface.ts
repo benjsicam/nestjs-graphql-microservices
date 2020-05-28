@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs'
+import { Metadata } from 'grpc'
 
-import { Iid, IQuery, ICount } from '../commons/commons.interface'
+import { IId, IQuery, ICount } from '../commons/commons.interface'
 import { User, UsersConnection } from '../graphql/typings'
 import { UserDto } from './user.dto'
 
@@ -10,11 +11,11 @@ interface UpdateUserInput {
 }
 
 export interface IUsersService {
-  find(query: IQuery): Observable<UsersConnection>
-  findById(id: Iid): Observable<User>
-  findOne(query: IQuery): Observable<User>
-  count(query: IQuery): Observable<ICount>
-  create(input: UserDto): Observable<User>
+  find(query: IQuery, metadata?: Metadata): Observable<UsersConnection>
+  findById(id: IId, metadata?: Metadata): Observable<User>
+  findOne(query: IQuery, metadata?: Metadata): Observable<User>
+  count(query: IQuery, metadata?: Metadata): Observable<ICount>
+  create(input: UserDto, metadata?: Metadata): Observable<User>
   update(input: UpdateUserInput): Observable<User>
-  destroy(query: IQuery): Observable<ICount>
+  destroy(query: IQuery, metadata?: Metadata): Observable<ICount>
 }

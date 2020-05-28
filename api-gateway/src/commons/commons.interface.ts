@@ -1,4 +1,4 @@
-export interface Iid {
+export interface IId {
   id: string
 }
 

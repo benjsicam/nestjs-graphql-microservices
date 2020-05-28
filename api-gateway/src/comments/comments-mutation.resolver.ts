@@ -2,6 +2,7 @@ import { Inject, OnModuleInit, UseGuards } from '@nestjs/common'
 import { ClientGrpcProxy } from '@nestjs/microservices'
 import { Resolver, Args, Mutation } from '@nestjs/graphql'
 
+import { Metadata } from 'grpc'
 import { PinoLogger } from 'nestjs-pino'
 import { PubSub } from 'graphql-subscriptions'
 
@@ -48,14 +49,21 @@ export class CommentsMutationResolver implements OnModuleInit {
 
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async updateComment(@Args('id') id: string, @Args('data') data: UpdateCommentInput): Promise<CommentPayload> {
+  async updateComment(@CurrentUser() user: User, @Args('id') id: string, @Args('data') data: UpdateCommentInput): Promise<CommentPayload> {
+    const metadata: Metadata = new Metadata()
+
+    metadata.add('user', user.id)
+
     const comment: Comment = await this.commentsService
-      .update({
-        id,
-        data: {
-          ...data
-        }
-      })
+      .update(
+        {
+          id,
+          data: {
+            ...data
+          }
+        },
+        metadata
+      )
       .toPromise()
 
     return { comment }
@@ -63,10 +71,10 @@ export class CommentsMutationResolver implements OnModuleInit {
 
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async deleteComment(@Args('id') id: string): Promise<DeleteCommentPayload> {
+  async deleteComment(@CurrentUser() user: User, @Args('id') id: string): Promise<DeleteCommentPayload> {
     return this.commentsService
       .destroy({
-        where: JSON.stringify({ id })
+        where: JSON.stringify({ id, author: user.id })
       })
       .toPromise()
   }

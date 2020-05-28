@@ -74,7 +74,6 @@ You must install the following on your local machine:
 
 * [ ] Add unit tests
 * [x] Add refresh token support
-* [ ] Add authorization
 * [ ] Add request/input data validation
 * [ ] Improve logging
 * [ ] Improve error handling
@@ -82,6 +81,7 @@ You must install the following on your local machine:
 
 ### Microservices
 
+* [x] Add authorization
 * [ ] Add caching
 * [ ] Add health checks
 * [ ] Add unit tests

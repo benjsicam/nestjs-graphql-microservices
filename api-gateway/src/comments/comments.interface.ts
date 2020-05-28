@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs'
+import { Metadata } from 'grpc'
 
-import { Iid, IQuery, ICount } from '../commons/commons.interface'
+import { IId, IQuery, ICount } from '../commons/commons.interface'
 import { CommentsConnection, Comment } from '../graphql/typings'
 import { CommentDto } from './comment.dto'
 
@@ -10,11 +11,11 @@ interface IUpdateCommentInput {
 }
 
 export interface ICommentsService {
-  find(query: IQuery): Observable<CommentsConnection>
-  findById(id: Iid): Observable<Comment>
-  findOne(query: IQuery): Observable<Comment>
-  count(query: IQuery): Observable<ICount>
-  create(input: CommentDto): Observable<Comment>
-  update(input: IUpdateCommentInput): Observable<Comment>
-  destroy(query: IQuery): Observable<ICount>
+  find(query: IQuery, metadata?: Metadata): Observable<CommentsConnection>
+  findById(id: IId, metadata?: Metadata): Observable<Comment>
+  findOne(query: IQuery, metadata?: Metadata): Observable<Comment>
+  count(query: IQuery, metadata?: Metadata): Observable<ICount>
+  create(input: CommentDto, metadata?: Metadata): Observable<Comment>
+  update(input: IUpdateCommentInput, metadata?: Metadata): Observable<Comment>
+  destroy(query: IQuery, metadata?: Metadata): Observable<ICount>
 }

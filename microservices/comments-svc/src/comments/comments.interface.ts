@@ -4,6 +4,11 @@ import { Comment } from './comment.model'
 import { CommentDto } from './comment.dto'
 import { IFindAndPaginateOptions, IFindAndPaginateResult } from '../commons/find-and-paginate.interface'
 
+export interface ICommentUpdateInput {
+  id: string
+  data: CommentDto
+}
+
 export interface ICommentsService {
   find(query?: IFindAndPaginateOptions): Promise<IFindAndPaginateResult<Comment>>
   findById(id: string): Promise<Comment>

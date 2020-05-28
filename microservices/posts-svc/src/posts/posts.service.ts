@@ -12,10 +12,7 @@ import { PostDto } from './post.dto'
 
 @Injectable()
 export class PostsService implements IPostsService {
-  constructor(
-    @InjectModel(Post) private readonly repo: typeof Post,
-    private readonly logger: PinoLogger
-  ) {
+  constructor(@InjectModel(Post) private readonly repo: typeof Post, private readonly logger: PinoLogger) {
     logger.setContext(PostsService.name)
   }
 

@@ -24,7 +24,7 @@
     "@nestjs/sequelize": "0.1.0",
     "aigle": "1.14.1",
     "grpc": "1.24.2",
-    "lodash": "4.17.15",
+    "lodash": "4.17.21",
     "nestjs-pino": "1.2.0",
     "pg": "8.2.1",
     "pg-hstore": "2.3.3",

@@ -47,7 +47,7 @@
     "rxjs": "6.5.5"
   },
   "devDependencies": {
-    "@nestjs/cli": "7.2.0",
+    "@nestjs/cli": "9.1.8",
     "@nestjs/schematics": "7.0.0",
     "@nestjs/testing": "7.1.1",
     "@types/bcryptjs": "2.4.2",

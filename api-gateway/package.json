@@ -22,7 +22,7 @@
     "@nestjs/config": "0.5.0",
     "@nestjs/core": "7.1.1",
     "@nestjs/graphql": "7.3.11",
-    "@nestjs/jwt": "7.0.0",
+    "@nestjs/jwt": "10.0.1",
     "@nestjs/microservices": "7.1.1",
     "@nestjs/passport": "7.0.0",
     "@nestjs/platform-express": "7.1.1",
@@ -41,7 +41,7 @@
     "lodash": "4.17.15",
     "nestjs-pino": "1.2.0",
     "passport": "0.4.1",
-    "passport-jwt": "4.0.0",
+    "passport-jwt": "4.0.1",
     "pino": "6.3.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.5"
